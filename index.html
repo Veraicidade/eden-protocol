@@ -4,28 +4,203 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARDIM_EDEN_SYSTEM</title>
+  <title>ICU</title>
   <style>
+    :root {
+      --bg: #000;
+      --text: #cfcfcf;
+      --border: #666;
+      --red: #a30000;
+      --link: #7a0000;
+      --shake-x: 2px;
+      --shake-y: 2px;
+      --shake-rot: 0.6deg;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
     body {
-      background: black;
-      color: #cfcfcf;
+      color: var(--text);
       font-family: monospace;
       padding: 24px;
+      position: relative;
     }
-    .hidden { display: none; }
+
+    .hidden {
+      display: none;
+    }
+
+    .red {
+      color: var(--red);
+    }
+
+    a {
+      color: var(--link);
+    }
+
+    #app {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
+
     input, button {
       background: black;
       color: #cfcfcf;
-      border: 1px solid #666;
+      border: 1px solid var(--border);
       padding: 8px;
       font-family: monospace;
       margin-top: 8px;
     }
-    .red { color: #a30000; }
-    a { color: #7a0000; }
+
+    input {
+      width: 100%;
+      max-width: 340px;
+      display: block;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: #999;
+    }
+
+    /* Camada dos olhos */
+    #eyes-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .eye {
+      position: absolute;
+      width: 90px;
+      height: 46px;
+      border: 2px solid rgba(255,255,255,0.9);
+      border-radius: 50% / 60%;
+      opacity: 0;
+      transform: scale(0.7);
+      animation:
+        eyeFadeIn 0.8s ease forwards,
+        eyeBlink var(--blink-duration, 5s) infinite ease-in-out;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.12));
+    }
+
+    .eye::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px rgba(255,255,255,0.35);
+    }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #000;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes eyeFadeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.55);
+      }
+      100% {
+        opacity: var(--eye-opacity, 0.8);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes eyeBlink {
+      0%, 44%, 48%, 100% {
+        transform: scaleY(1);
+      }
+      46% {
+        transform: scaleY(0.08);
+      }
+    }
+
+    /* Tremor da página */
+    body.shaking {
+      animation: pageShake 0.12s infinite linear;
+    }
+
+    @keyframes pageShake {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      10%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
+      20%  { transform: translate(var(--shake-x), calc(var(--shake-y) * -1)) rotate(var(--shake-rot)); }
+      30%  { transform: translate(calc(var(--shake-x) * -1), 0) rotate(calc(var(--shake-rot) * -1)); }
+      40%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
+      50%  { transform: translate(0, calc(var(--shake-y) * -1)) rotate(0deg); }
+      60%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
+      70%  { transform: translate(var(--shake-x), 0) rotate(var(--shake-rot)); }
+      80%  { transform: translate(calc(var(--shake-x) * -1), calc(var(--shake-y) * -1)) rotate(calc(var(--shake-rot) * -1)); }
+      90%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    /* Vinheta / clima */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at center, transparent 45%, rgba(0,0,0,0.5) 100%);
+    }
+
+    /* Flash sutil quando a tensão aumenta */
+    .glitch {
+      animation: glitchFlash 0.18s linear 2;
+    }
+
+    @keyframes glitchFlash {
+      0%   { opacity: 1; filter: none; }
+      25%  { opacity: 0.85; filter: contrast(1.4) brightness(1.15); }
+      50%  { opacity: 1; filter: hue-rotate(8deg); }
+      75%  { opacity: 0.92; filter: contrast(1.2); }
+      100% { opacity: 1; filter: none; }
+    }
+
+    #final {
+      margin-top: 18px;
+      padding-top: 8px;
+      border-top: 1px solid #411;
+    }
+
+    p {
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
+  <div id="eyes-layer"></div>
+
   <div id="app">
     <p class="red">JARDIM_EDEN_SYSTEM v1.3</p>
     <p>> acesso detectado</p>
@@ -33,28 +208,28 @@
 
     <div id="q1">
       <p>Quem tem milhares de olhos sobre o corpo?</p>
-      <input id="a1" type="text">
+      <input id="a1" type="text" autocomplete="off">
       <button onclick="next1()">Enviar</button>
       <p id="r1"></p>
     </div>
 
     <div id="q2" class="hidden">
       <p>Quem é vermelho e tem um culto?</p>
-      <input id="a2" type="text">
+      <input id="a2" type="text" autocomplete="off">
       <button onclick="next2()">Enviar</button>
       <p id="r2"></p>
     </div>
 
     <div id="q3" class="hidden">
       <p>Quem fundou tudo isso?</p>
-      <input id="a3" type="text">
+      <input id="a3" type="text" autocomplete="off">
       <button onclick="next3()">Enviar</button>
       <p id="r3"></p>
     </div>
 
     <div id="q4" class="hidden">
       <p>Quem é o falso Deus?</p>
-      <input id="a4" type="text">
+      <input id="a4" type="text" autocomplete="off">
       <button onclick="next4()">Enviar</button>
       <p id="r4"></p>
     </div>
@@ -71,45 +246,191 @@
   </div>
 
   <script>
+    const eyesLayer = document.getElementById("eyes-layer");
+    const body = document.body;
+    const app = document.getElementById("app");
+
+    let horrorStarted = false;
+    let eyeInterval = null;
+    let eyeCount = 0;
+    let intensityLevel = 1;
+
     function clean(v) {
       return v.trim().toLowerCase();
     }
 
+    function startHorror() {
+      if (horrorStarted) return;
+
+      horrorStarted = true;
+      body.classList.add("shaking");
+      setShakeIntensity(1);
+
+      addEyes(4);
+
+      eyeInterval = setInterval(() => {
+        addEyes(2);
+      }, 1200);
+    }
+
+    function stopHorror() {
+      body.classList.remove("shaking");
+      horrorStarted = false;
+
+      if (eyeInterval) {
+        clearInterval(eyeInterval);
+        eyeInterval = null;
+      }
+
+      const eyes = document.querySelectorAll(".eye");
+      eyes.forEach((eye) => {
+        eye.style.transition = "opacity 1.2s ease";
+        eye.style.opacity = "0";
+      });
+    }
+
+    function setShakeIntensity(level) {
+      intensityLevel = level;
+
+      const map = {
+        1: { x: 1.5, y: 1.5, rot: 0.3 },
+        2: { x: 2.5, y: 2.5, rot: 0.5 },
+        3: { x: 3.5, y: 3.5, rot: 0.8 },
+        4: { x: 5, y: 4.5, rot: 1.1 }
+      };
+
+      const cfg = map[level] || map[1];
+      document.documentElement.style.setProperty("--shake-x", cfg.x + "px");
+      document.documentElement.style.setProperty("--shake-y", cfg.y + "px");
+      document.documentElement.style.setProperty("--shake-rot", cfg.rot + "deg");
+    }
+
+    function pulseGlitch() {
+      app.classList.remove("glitch");
+      void app.offsetWidth;
+      app.classList.add("glitch");
+    }
+
+    function addEyes(amount) {
+      for (let i = 0; i < amount; i++) {
+        createEye();
+      }
+    }
+
+    function createEye() {
+      if (eyeCount >= 40) return;
+
+      const eye = document.createElement("div");
+      eye.className = "eye";
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const left = Math.random() * (width - 100);
+      const top = Math.random() * (height - 60);
+      const scale = 0.6 + Math.random() * 1.1;
+      const rotate = -18 + Math.random() * 36;
+      const opacity = 0.20 + Math.random() * 0.55;
+      const blinkDuration = (2.8 + Math.random() * 4.5).toFixed(2) + "s";
+
+      eye.style.left = left + "px";
+      eye.style.top = top + "px";
+      eye.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+      eye.style.setProperty("--eye-opacity", opacity);
+      eye.style.setProperty("--blink-duration", blinkDuration);
+
+      eyesLayer.appendChild(eye);
+      eyeCount++;
+
+      if (eyeCount > 18) {
+        const allEyes = document.querySelectorAll(".eye");
+        const oldest = allEyes[0];
+        if (oldest) {
+          oldest.remove();
+          eyeCount--;
+        }
+      }
+    }
+
+    function escalate(level) {
+      setShakeIntensity(level);
+      pulseGlitch();
+      addEyes(level + 1);
+    }
+
+    function revealNext(currentResponseId, nextQuestionId) {
+      document.getElementById(nextQuestionId).classList.remove("hidden");
+      document.getElementById(currentResponseId).textContent = "correto.";
+    }
+
+    function wrong(responseId) {
+      document.getElementById(responseId).textContent = "resposta inválida.";
+      pulseGlitch();
+      addEyes(1);
+    }
+
     function next1() {
+      startHorror();
+
       if (clean(document.getElementById("a1").value) === "khornes") {
-        document.getElementById("q2").classList.remove("hidden");
-        document.getElementById("r1").textContent = "correto.";
+        revealNext("r1", "q2");
+        escalate(2);
       } else {
-        document.getElementById("r1").textContent = "resposta inválida.";
+        wrong("r1");
       }
     }
 
     function next2() {
+      startHorror();
+
       if (clean(document.getElementById("a2").value) === "verjo") {
-        document.getElementById("q3").classList.remove("hidden");
-        document.getElementById("r2").textContent = "correto.";
+        revealNext("r2", "q3");
+        escalate(3);
       } else {
-        document.getElementById("r2").textContent = "resposta inválida.";
+        wrong("r2");
       }
     }
 
     function next3() {
+      startHorror();
+
       if (clean(document.getElementById("a3").value) === "moria") {
-        document.getElementById("q4").classList.remove("hidden");
-        document.getElementById("r3").textContent = "correto.";
+        revealNext("r3", "q4");
+        escalate(4);
       } else {
-        document.getElementById("r3").textContent = "resposta inválida.";
+        wrong("r3");
       }
     }
 
     function next4() {
+      startHorror();
+
       if (clean(document.getElementById("a4").value) === "verai") {
         document.getElementById("final").classList.remove("hidden");
         document.getElementById("r4").textContent = "correto.";
+        stopHorror();
       } else {
-        document.getElementById("r4").textContent = "resposta inválida.";
+        wrong("r4");
       }
     }
+
+    function bindStartOnInteraction() {
+      const inputs = document.querySelectorAll("input");
+
+      inputs.forEach((input) => {
+        input.addEventListener("focus", startHorror, { once: true });
+
+        input.addEventListener("input", () => {
+          startHorror();
+
+          if (Math.random() > 0.65) {
+            addEyes(1);
+          }
+        });
+      });
+    }
+
+    bindStartOnInteraction();
   </script>
 </body>
 </html>
