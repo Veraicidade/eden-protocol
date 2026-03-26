@@ -12,6 +12,7 @@
       --border: #666;
       --red: #a30000;
       --link: #7a0000;
+      --panel: rgba(0, 0, 0, 0.82);
       --shake-x: 2px;
       --shake-y: 2px;
       --shake-rot: 0.6deg;
@@ -23,7 +24,7 @@
 
     html, body {
       margin: 0;
-      height: 100%;
+      min-height: 100%;
       background: var(--bg);
       overflow-x: hidden;
     }
@@ -38,56 +39,46 @@
       position: relative;
     }
 
-    .hidden {
-      display: none;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.6) 100%);
     }
 
-    .red {
-      color: var(--red);
+    body.shaking {
+      animation: pageShake 0.12s infinite linear;
+    }
+
+    @keyframes pageShake {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      10%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
+      20%  { transform: translate(var(--shake-x), calc(var(--shake-y) * -1)) rotate(var(--shake-rot)); }
+      30%  { transform: translate(calc(var(--shake-x) * -1), 0) rotate(calc(var(--shake-rot) * -1)); }
+      40%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
+      50%  { transform: translate(0, calc(var(--shake-y) * -1)) rotate(0deg); }
+      60%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
+      70%  { transform: translate(var(--shake-x), 0) rotate(var(--shake-rot)); }
+      80%  { transform: translate(calc(var(--shake-x) * -1), calc(var(--shake-y) * -1)) rotate(calc(var(--shake-rot) * -1)); }
+      90%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
 
     a {
       color: var(--link);
     }
 
-    #app {
-      position: relative;
-      z-index: 2;
-      max-width: 720px;
-      width: 100%;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.75);
-      padding: 28px;
-      border: 1px solid #222;
-      backdrop-filter: blur(2px);
+    .hidden {
+      display: none !important;
     }
 
-    input, button {
-      background: black;
-      color: #cfcfcf;
-      border: 1px solid var(--border);
-      padding: 8px;
-      font-family: monospace;
-      margin-top: 8px;
+    .red {
+      color: var(--red);
     }
 
-    input {
-      width: 100%;
-      max-width: 340px;
-      margin: 8px auto 0 auto;
-      display: block;
-    }
-
-    button {
-      margin-top: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      border-color: #999;
-    }
-
-    /* Camada dos olhos */
     #eyes-layer {
       position: fixed;
       inset: 0;
@@ -135,50 +126,26 @@
     }
 
     @keyframes eyeFadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: var(--eye-opacity, 0.8);
-      }
+      0% { opacity: 0; }
+      100% { opacity: var(--eye-opacity, 0.8); }
     }
 
     @keyframes eyeBlink {
-      0%, 44%, 48%, 100% {
-        height: 46px;
-      }
-      46% {
-        height: 6px;
-      }
+      0%, 44%, 48%, 100% { height: 46px; }
+      46% { height: 6px; }
     }
 
-    /* Tremor da página */
-    body.shaking {
-      animation: pageShake 0.12s infinite linear;
-    }
-
-    @keyframes pageShake {
-      0%   { transform: translate(0, 0) rotate(0deg); }
-      10%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
-      20%  { transform: translate(var(--shake-x), calc(var(--shake-y) * -1)) rotate(var(--shake-rot)); }
-      30%  { transform: translate(calc(var(--shake-x) * -1), 0) rotate(calc(var(--shake-rot) * -1)); }
-      40%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
-      50%  { transform: translate(0, calc(var(--shake-y) * -1)) rotate(0deg); }
-      60%  { transform: translate(calc(var(--shake-x) * -1), var(--shake-y)) rotate(calc(var(--shake-rot) * -1)); }
-      70%  { transform: translate(var(--shake-x), 0) rotate(var(--shake-rot)); }
-      80%  { transform: translate(calc(var(--shake-x) * -1), calc(var(--shake-y) * -1)) rotate(calc(var(--shake-rot) * -1)); }
-      90%  { transform: translate(var(--shake-x), var(--shake-y)) rotate(var(--shake-rot)); }
-      100% { transform: translate(0, 0) rotate(0deg); }
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background:
-        radial-gradient(circle at center, transparent 45%, rgba(0,0,0,0.5) 100%);
+    .panel {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 760px;
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid #222;
+      padding: 28px;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 0 24px rgba(0,0,0,0.45);
     }
 
     .glitch {
@@ -191,6 +158,118 @@
       50%  { opacity: 1; filter: hue-rotate(8deg); }
       75%  { opacity: 0.92; filter: contrast(1.2); }
       100% { opacity: 1; filter: none; }
+    }
+
+    .screen-title {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .subtle {
+      color: #8b8b8b;
+      font-size: 13px;
+    }
+
+    .login-box {
+      max-width: 420px;
+      margin: 24px auto 0 auto;
+      text-align: left;
+      border: 1px solid #1f1f1f;
+      background: rgba(0,0,0,0.55);
+      padding: 18px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #bdbdbd;
+    }
+
+    input, button, select, textarea {
+      width: 100%;
+      background: #000;
+      color: #cfcfcf;
+      border: 1px solid var(--border);
+      padding: 10px;
+      font-family: monospace;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: #999;
+    }
+
+    .login-actions {
+      margin-top: 14px;
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #9e9e9e;
+    }
+
+    .account-header {
+      text-align: left;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #231313;
+      padding-bottom: 12px;
+    }
+
+    .account-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .card {
+      border: 1px solid #1f1f1f;
+      background: rgba(0,0,0,0.45);
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #d8d8d8;
+      font-size: 16px;
+    }
+
+    .meta {
+      color: #8f8f8f;
+      font-size: 13px;
+    }
+
+    .logout-row {
+      margin-top: 18px;
+      text-align: right;
+    }
+
+    .small-btn {
+      width: auto;
+      padding: 8px 14px;
+      display: inline-block;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 10px;
+      filter: grayscale(1) contrast(1.1);
+    }
+
+    #quiz-section {
+      margin-top: 20px;
+      text-align: center;
+      border-top: 1px solid #1e1e1e;
+      padding-top: 18px;
     }
 
     #final {
@@ -207,47 +286,44 @@
 <body>
   <div id="eyes-layer"></div>
 
-  <div id="app">
-    <p class="red">JARDIM_EDEN_SYSTEM v1.3 (Apenas pra pessoas autorizadas.)</p>
-    <p>> acesso detectado</p>
-    <p>> verificação de memória necessária</p>
+  <div id="app" class="panel">
+    <div id="login-screen">
+      <p class="red screen-title">JARDIM_EDEN_SYSTEM v1.3</p>
+      <p>> acesso detectado</p>
+      <p>> autenticação necessária</p>
+      <p class="subtle">somente participantes autorizados devem prosseguir</p>
 
-    <div id="q1">
-      <p>Quem tem milhares de olhos sobre o corpo?</p>
-      <input id="a1" type="text" autocomplete="off">
-      <button onclick="next1()">Enviar?</button>
-      <p id="r1"></p>
+      <div class="login-box">
+        <div class="field">
+          <label for="login-user">Usuário</label>
+          <input id="login-user" type="text" autocomplete="off" placeholder="ex.: Carl Graham">
+        </div>
+
+        <div class="field">
+          <label for="login-pass">Senha</label>
+          <input id="login-pass" type="password" autocomplete="off" placeholder="**********">
+        </div>
+
+        <div class="login-actions">
+          <button onclick="doLogin()">Entrar</button>
+        </div>
+
+        <p id="login-status" class="status"></p>
+      </div>
     </div>
 
-    <div id="q2" class="hidden">
-      <p>Quem é vermelho e tem um culto?</p>
-      <input id="a2" type="text" autocomplete="off">
-      <button onclick="next2()">Enviar?</button>
-      <p id="r2"></p>
-    </div>
+    <div id="account-screen" class="hidden">
+      <div class="account-header">
+        <p class="red" id="account-title">CONTA CARREGADA</p>
+        <p id="account-user-line">usuário: --</p>
+        <p id="account-role-line" class="meta">perfil: --</p>
+      </div>
 
-    <div id="q3" class="hidden">
-      <p>Quem está chorando eternamente, mas com um sorriso?</p>
-      <input id="a3" type="text" autocomplete="off">
-      <button onclick="next3()">Enviar?</button>
-      <p id="r3"></p>
-    </div>
+      <div id="account-content" class="account-grid"></div>
 
-    <div id="q4" class="hidden">
-      <p>Quem é o falso Deus?</p>
-      <input id="a4" type="text" autocomplete="off">
-      <button onclick="next4()">Enviar</button>
-      <p id="r4"></p>
-    </div>
-
-    <div id="final" class="hidden">
-      <p class="red">ACESSO CONCEDIDO</p>
-      <p>registro de voz localizado:</p>
-      <p>
-        <a href="https://www.dropbox.com/scl/fi/c2w6z884u4mmjliahemp6/Verjo_01.mp3?rlkey=a7lgah5gjzkqkw9fp1eyxchv9&st=ul6zt99l&dl=1" target="_blank">
-          Verjo_01.mp3
-        </a>
-      </p>
+      <div class="logout-row">
+        <button class="small-btn" onclick="logout()">Sair</button>
+      </div>
     </div>
   </div>
 
@@ -256,6 +332,14 @@
     const body = document.body;
     const app = document.getElementById("app");
 
+    const loginScreen = document.getElementById("login-screen");
+    const accountScreen = document.getElementById("account-screen");
+    const loginStatus = document.getElementById("login-status");
+    const accountTitle = document.getElementById("account-title");
+    const accountUserLine = document.getElementById("account-user-line");
+    const accountRoleLine = document.getElementById("account-role-line");
+    const accountContent = document.getElementById("account-content");
+
     let horrorStarted = false;
     let eyeInterval = null;
     let eyeCount = 0;
@@ -263,8 +347,94 @@
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
+    const accounts = {
+      "carl graham": {
+        password: "46616c686f",
+        displayName: "Carl Graham",
+        role: "participante_01",
+        html: `
+          <div class="card">
+            <h3>Arquivo recuperado</h3>
+            <p>Um arquivo de áudio foi associado a esta conta.</p>
+            <p class="meta">nome do arquivo: PrimeiroParticipante.mp3</p>
+            <audio controls>
+              <source src="PrimeiroParticipante.mp3" type="audio/mpeg">
+              Seu navegador não suporta áudio.
+            </audio>
+            <p style="margin-top:12px;">
+              <a href="PrimeiroParticipante.mp3" download>baixar PrimeiroParticipante.mp3</a>
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Observações</h3>
+            <p>Esta conta parece ter sido a primeira a registrar atividade relevante.</p>
+            <p class="meta">status: fragmentos disponíveis</p>
+          </div>
+        `
+      },
+
+      "john mahnfredy": {
+        password: "30333a3132",
+        displayName: "John Mahnfredy",
+        role: "participante_02",
+        html: `
+          <div class="card">
+            <h3>Caixa de entrada vazia</h3>
+            <p>Nenhum arquivo foi associado a esta conta ainda.</p>
+            <p class="meta">status: conteúdo indefinido</p>
+          </div>
+
+          <div class="card">
+            <h3>Observações</h3>
+            <p>Você pode substituir este bloco por pistas, imagens, textos ou outro áudio depois.</p>
+          </div>
+        `
+      },
+
+      "erik carpinter": {
+        password: "446961626f",
+        displayName: "Erik Carpinter",
+        role: "participante_03",
+        html: `
+          <div class="card">
+            <h3>Registro indisponível</h3>
+            <p>Esta conta existe, mas o conteúdo ainda não foi definido.</p>
+            <p class="meta">status: bloqueado / aguardando dados</p>
+          </div>
+
+          <div class="card">
+            <h3>Observações</h3>
+            <p>Você pode usar esta área para outro enigma, um documento, coordenadas ou uma senha futura.</p>
+          </div>
+        `
+      }
+    };
+
     function clean(v) {
       return v.trim().toLowerCase();
+    }
+
+    function pulseGlitch() {
+      app.classList.remove("glitch");
+      void app.offsetWidth;
+      app.classList.add("glitch");
+    }
+
+    function setShakeIntensity(level) {
+      intensityLevel = level;
+
+      const map = {
+        1: { x: 1.5, y: 1.5, rot: 0.3 },
+        2: { x: 2.5, y: 2.5, rot: 0.5 },
+        3: { x: 3.5, y: 3.5, rot: 0.8 },
+        4: { x: 5, y: 4.5, rot: 1.1 }
+      };
+
+      const cfg = map[level] || map[1];
+      document.documentElement.style.setProperty("--shake-x", cfg.x + "px");
+      document.documentElement.style.setProperty("--shake-y", cfg.y + "px");
+      document.documentElement.style.setProperty("--shake-rot", cfg.rot + "deg");
     }
 
     function startHorror() {
@@ -273,7 +443,6 @@
       horrorStarted = true;
       body.classList.add("shaking");
       setShakeIntensity(1);
-
       addEyes(4);
 
       eyeInterval = setInterval(() => {
@@ -295,28 +464,6 @@
         eye.style.transition = "opacity 1.2s ease";
         eye.style.opacity = "0";
       });
-    }
-
-    function setShakeIntensity(level) {
-      intensityLevel = level;
-
-      const map = {
-        1: { x: 1.5, y: 1.5, rot: 0.3 },
-        2: { x: 2.5, y: 2.5, rot: 0.5 },
-        3: { x: 3.5, y: 3.5, rot: 0.8 },
-        4: { x: 5, y: 4.5, rot: 1.1 }
-      };
-
-      const cfg = map[level] || map[1];
-      document.documentElement.style.setProperty("--shake-x", cfg.x + "px");
-      document.documentElement.style.setProperty("--shake-y", cfg.y + "px");
-      document.documentElement.style.setProperty("--shake-rot", cfg.rot + "deg");
-    }
-
-    function pulseGlitch() {
-      app.classList.remove("glitch");
-      void app.offsetWidth;
-      app.classList.add("glitch");
     }
 
     function addEyes(amount) {
@@ -349,9 +496,6 @@
       const rotate = -18 + Math.random() * 36;
       const opacity = 0.20 + Math.random() * 0.55;
       const blinkDuration = (2.8 + Math.random() * 4.5).toFixed(2) + "s";
-
-      eye.dataset.scale = scale;
-      eye.dataset.rotate = rotate;
 
       eye.style.left = left + "px";
       eye.style.top = top + "px";
@@ -398,82 +542,48 @@
       });
     }
 
-    function escalate(level) {
-      setShakeIntensity(level);
+    function doLogin() {
+      startHorror();
+
+      const userInput = clean(document.getElementById("login-user").value);
+      const passInput = document.getElementById("login-pass").value.trim();
+
+      const account = accounts[userInput];
+
+      if (!account || account.password !== passInput) {
+        loginStatus.textContent = "credenciais inválidas.";
+        pulseGlitch();
+        addEyes(2);
+        setShakeIntensity(2);
+        return;
+      }
+
+      loginStatus.textContent = "acesso autorizado.";
+      accountTitle.textContent = "CONTA CARREGADA";
+      accountUserLine.textContent = "usuário: " + account.displayName;
+      accountRoleLine.textContent = "perfil: " + account.role;
+      accountContent.innerHTML = account.html;
+
+      loginScreen.classList.add("hidden");
+      accountScreen.classList.remove("hidden");
+
       pulseGlitch();
-      addEyes(level + 1);
-    }
+      setShakeIntensity(3);
+      addEyes(3);
 
-    function revealNext(currentResponseId, nextQuestionId) {
-      document.getElementById(nextQuestionId).classList.remove("hidden");
-      document.getElementById(currentResponseId).textContent = "correto.";
-    }
-
-    function wrong(responseId) {
-      document.getElementById(responseId).textContent = "resposta inválida.";
-      pulseGlitch();
-      addEyes(1);
-    }
-
-    function next1() {
-      startHorror();
-
-      if (clean(document.getElementById("a1").value) === "khornes") {
-        revealNext("r1", "q2");
-        escalate(2);
-      } else {
-        wrong("r1");
-      }
-    }
-
-    function next2() {
-      startHorror();
-
-      if (clean(document.getElementById("a2").value) === "verjo") {
-        revealNext("r2", "q3");
-        escalate(3);
-      } else {
-        wrong("r2");
-      }
-    }
-
-    function next3() {
-      startHorror();
-
-      if (clean(document.getElementById("a3").value) === "moria") {
-        revealNext("r3", "q4");
-        escalate(4);
-      } else {
-        wrong("r3");
-      }
-    }
-
-    function next4() {
-      startHorror();
-
-      if (clean(document.getElementById("a4").value) === "verai") {
-        document.getElementById("final").classList.remove("hidden");
-        document.getElementById("r4").textContent = "correto.";
+      setTimeout(() => {
         stopHorror();
-      } else {
-        wrong("r4");
-      }
+      }, 900);
     }
 
-    function bindStartOnInteraction() {
-      const inputs = document.querySelectorAll("input");
-
-      inputs.forEach((input) => {
-        input.addEventListener("focus", startHorror, { once: true });
-
-        input.addEventListener("input", () => {
-          startHorror();
-
-          if (Math.random() > 0.65) {
-            addEyes(1);
-          }
-        });
-      });
+    function logout() {
+      accountScreen.classList.add("hidden");
+      loginScreen.classList.remove("hidden");
+      accountContent.innerHTML = "";
+      loginStatus.textContent = "";
+      document.getElementById("login-user").value = "";
+      document.getElementById("login-pass").value = "";
+      pulseGlitch();
     }
 
     document.addEventListener("mousemove", (e) => {
@@ -482,7 +592,24 @@
       updateEyeTracking();
     });
 
-    bindStartOnInteraction();
+    document.getElementById("login-user").addEventListener("focus", startHorror, { once: true });
+    document.getElementById("login-pass").addEventListener("focus", startHorror, { once: true });
+
+    document.getElementById("login-user").addEventListener("input", () => {
+      startHorror();
+      if (Math.random() > 0.7) addEyes(1);
+    });
+
+    document.getElementById("login-pass").addEventListener("input", () => {
+      startHorror();
+      if (Math.random() > 0.55) addEyes(1);
+    });
+
+    document.getElementById("login-pass").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        doLogin();
+      }
+    });
   </script>
 </body>
 </html>
